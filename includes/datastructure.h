@@ -37,6 +37,11 @@
 
     /* COMPONENTS */
 
+    typedef struct {
+        char *key;
+        char *value;
+    } tuple_t;
+
     typedef enum compType {
         GRAPHICS
     } compType_t;

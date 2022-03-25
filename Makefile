@@ -15,6 +15,10 @@ PATH_BASICS	=	./sources/
 BASICS	=	main.c									\
 
 ## ========================================================================== ##
+PATH_UTILS	=	./sources/utils/
+UTILS	=	tuple.c									\
+
+## ========================================================================== ##
 PATH_CORE	=	./sources/core/
 CORE	=	core.c									\
 			window.c								\
@@ -39,6 +43,7 @@ SCENES	=	intro.c									\
 
 ## ========================================================================== ##
 SRC	=	$(addprefix $(PATH_BASICS), $(BASICS))		\
+		$(addprefix $(PATH_UTILS), 	$(UTILS))		\
 		$(addprefix $(PATH_CORE), 	$(CORE))		\
 		$(addprefix $(PATH_DICTS), 	$(DICTS))		\
 		$(addprefix $(PATH_COMPS), 	$(COMPS))		\
@@ -59,9 +64,9 @@ WHITE	=	\033[0m
 ## ========================================================================== ##
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS = -g -I./includes/ -D_GNU_SOURCE -W -Wall -Wextra -pedantic -O3 -O2
+CFLAGS = -export-dynamic -rdynamic -g -I./includes/ -D_GNU_SOURCE -W -Wall -Wextra -pedantic -O3 -O2
 
-LDFLAGS = -lm -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio
+LDFLAGS = -lm -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -ldl
 
 
 ## ========================================================================== ##
