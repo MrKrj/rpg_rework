@@ -8,7 +8,7 @@
 #include "prototypes.h"
 #include "ret_values.h"
 
-int main(__attribute__((unused)) int ac, __attribute__((unused)) char **av)
+int main(UNUSED int ac, UNUSED char **av)
 {
     core_t *core = Core();
 

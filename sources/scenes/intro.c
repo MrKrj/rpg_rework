@@ -11,17 +11,17 @@
 #include "prototypes.h"
 
 
-static int event(__attribute__((unused)) core_t *core)
+static int event(UNUSED core_t *core)
 {
     return 0;
 }
 
-static int update(__attribute__((unused)) core_t *core)
+static int update(UNUSED core_t *core)
 {
     return 0;
 }
 
-static int display(__attribute__((unused)) core_t *core)
+static int display(UNUSED core_t *core)
 {
     sfRenderWindow_drawSprite(
         core->window->window,
