@@ -11,8 +11,6 @@
     #include <stdio.h>
     #include "datastructure.h"
 
-    #define UNUSED __attribute__((unused))
-
     /* CORE */
 
     core_t *Core(void);
@@ -34,6 +32,7 @@
     tuple_t *TupleFromFile(FILE *);
     void Dtr_Tuple(tuple_t *);
 
+
     /* DICTS */
 
     spriteDict_t *SpriteDict(void);
@@ -41,6 +40,9 @@
 
     compDict_t *CompDict(void);
     void Dtr_CompDict(compDict_t *);
+
+    entitiesDict_t *EntitiesDict(void);
+    void Dtr_EntitiesDict(entitiesDict_t *);
 
 
     /* COMPS */

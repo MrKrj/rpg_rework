@@ -29,6 +29,7 @@ CORE	=	core.c									\
 PATH_DICTS	=	./sources/dicts/
 DICTS	=	spriteDict.c							\
 			compDict.c								\
+			entitiesDict.c							\
 
 
 ## ========================================================================== ##

@@ -24,16 +24,20 @@ const compCtor_t compCtors[] = {
 
 gameObject_t *GameObject(core_t *core, char *config)
 {
-    static int id = 0;
     gameObject_t *gO = malloc(sizeof(gameObject_t));
     FILE *fp = fopen(config, "r");
     char *line = NULL;
     size_t len = 0;
 
-    if (gO == NULL || fp == NULL)
+    if (gO == NULL) {
+        write(2, "Not enough memory to allocate\n", 30);
         return NULL;
-
-    gO->id = id++;
+    }
+    if (fp == NULL) {
+        free(gO);
+        write(2, "Can't open file\n", 16);
+        return NULL;
+    }
     gO->comps = CompDict();
     while (getline(&line, &len, fp) != -1)
         for (int i = 0; i < 1; ++i)

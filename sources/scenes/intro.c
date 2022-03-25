@@ -44,7 +44,8 @@ scene_t *Intro(core_t *core)
     intro->event = &event;
     intro->update = &update;
     intro->display = &display;
-    intro->entities = GameObject(core, "contents/entities/background.ini");
+    intro->entities = core->entities->getEntity(core->entities, "contents/entities/background.ini")->gameObject;
+
     return intro;
 }
 

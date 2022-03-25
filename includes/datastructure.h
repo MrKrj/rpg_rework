@@ -14,6 +14,26 @@
     #include <SFML/System.h>
     
     #define MICRO .microseconds / 1000000.f;
+    #define UNUSED __attribute__((unused))
+
+    /* ENTITIES DICT */
+
+    struct gameObject_s;
+    struct core_s;
+
+    typedef struct entity_s {
+        char *name;
+        struct gameObject_s *gameObject;
+
+        struct entity_s *next;
+    } entity_t;
+
+    typedef struct entitiesDict_s {
+        entity_t *entities;
+
+        entity_t *(*getEntity)(struct entitiesDict_s *, char *);
+        entity_t *(*addEntity)(struct core_s *, struct entitiesDict_s *, char *);
+    } entitiesDict_t;
 
     /* SPRITE DICT */
 
@@ -35,7 +55,7 @@
     } spriteDict_t;
 
 
-    /* COMPONENTS */
+    /* COMPONENTS DICT */
 
     typedef struct {
         char *key;
@@ -82,8 +102,6 @@
     } timed_t;
 
     typedef struct gameObject_s {
-        unsigned int id;
-        char *name;
         compDict_t *comps;
 
         int (*event)(struct core_s *);
@@ -106,6 +124,7 @@
         window_t *window;
         timed_t *time;
         spriteDict_t *sprites;
+        entitiesDict_t *entities;
         scene_t *curr;
         scene_t *tmp;
 
