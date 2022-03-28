@@ -25,7 +25,11 @@ static int display(UNUSED core_t *core)
 {
     sfRenderWindow_drawSprite(
         core->window->window,
-        toGraphics(core->curr->entities->comps->getComp(core->curr->entities->comps, GRAPHICS))->sprite,
+        toGraphics(
+            core->curr->entities->comps->getComp(
+                core->curr->entities->comps,
+                GRAPHICS)
+            )->sprite,
         NULL
     );
     return 0;
