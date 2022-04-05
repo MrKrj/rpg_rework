@@ -68,9 +68,6 @@ core_t *Core(void)
         return NULL;
     core->time = Timed();
     core->sprites = SpriteDict();
-    core->entities = EntitiesDict();
-    core->entities->addEntity(core, core->entities, "contents/entities/background.ini");
-    core->entities->addEntity(core, core->entities, "contents/entities/mountains.ini");
     core->curr = Intro(core);
     return core;
 }

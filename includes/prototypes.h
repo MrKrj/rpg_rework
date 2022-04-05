@@ -22,7 +22,8 @@
     timed_t *Timed(void);
     void Dtr_Timed(timed_t *);
 
-    gameObject_t *GameObject(core_t *, char *);
+    gameObject_t *GameObject(core_t *, char *, char *);
+    gameObject_t *GameObjectsFromConfig(core_t *, char *);
     void Dtr_GameObject(gameObject_t *);
 
 
@@ -40,9 +41,6 @@
 
     compDict_t *CompDict(void);
     void Dtr_CompDict(compDict_t *);
-
-    entitiesDict_t *EntitiesDict(void);
-    void Dtr_EntitiesDict(entitiesDict_t *);
 
 
     /* COMPS */

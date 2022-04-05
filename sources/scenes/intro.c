@@ -23,15 +23,16 @@ static int update(UNUSED core_t *core)
 
 static int display(UNUSED core_t *core)
 {
-    sfRenderWindow_drawSprite(
-        core->window->window,
-        toGraphics(
-            core->curr->entities->comps->getComp(
-                core->curr->entities->comps,
-                GRAPHICS)
-            )->sprite,
-        NULL
-    );
+    gameObject_t *tmp = core->curr->entities;
+
+    while (tmp != NULL) {
+        sfRenderWindow_drawSprite(
+            core->window->window,
+            toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS))->sprite,
+            NULL
+        );
+        tmp = tmp->next;
+    }
     return 0;
 }
 
@@ -48,7 +49,7 @@ scene_t *Intro(core_t *core)
     intro->event = &event;
     intro->update = &update;
     intro->display = &display;
-    intro->entities = core->entities->getEntity(core->entities, "contents/entities/background.ini")->gameObject;
+    intro->entities = GameObjectsFromConfig(core, "contents/scenes/intro.ini");
 
     return intro;
 }

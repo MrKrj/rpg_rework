@@ -22,7 +22,7 @@ const compCtor_t compCtors[] = {
     {"[graphics]\n", &Graphics}
 };
 
-gameObject_t *GameObject(core_t *core, char *config)
+gameObject_t *GameObject(core_t *core, char *name, char *config)
 {
     gameObject_t *gO = malloc(sizeof(gameObject_t));
     FILE *fp = fopen(config, "r");
@@ -43,7 +43,43 @@ gameObject_t *GameObject(core_t *core, char *config)
         for (int i = 0; i < 1; ++i)
             if (strcmp(line, compCtors[i].type) == 0)
                 gO->comps->addComp(gO->comps, compCtors[i].createComp(core, fp));
+    gO->next = NULL;
+    gO->name = strdup(name);
     return gO;
+}
+
+gameObject_t *addGameObject(core_t *core, gameObject_t *entities, char *name, char *config)
+{
+    gameObject_t *newGameObject = GameObject(core, name, config);
+    gameObject_t *tmp = entities;
+
+    if (entities == NULL)
+        return newGameObject;
+    while (tmp->next != NULL)
+        tmp = tmp->next;
+    tmp->next = newGameObject;
+    return entities;
+}
+
+gameObject_t *GameObjectsFromConfig(core_t *core, char *config)
+{
+    FILE *fp = fopen(config, "r");
+    char *line = NULL;
+    size_t len = 0;
+    tuple_t *tuple = NULL;
+    gameObject_t *entities = NULL;
+
+    if (fp == NULL) {
+        write(2, "Can't open file\n", 16);
+        return NULL;
+    }
+    while (getline(&line, &len, fp) != -1)
+        if (strcmp(line, "[entities]\n") != 0) {
+            tuple = Tuple(line);
+            entities = addGameObject(core, entities, tuple->key, tuple->value);
+            Dtr_Tuple(tuple);
+        }
+    return entities;
 }
 
 void Dtr_GameObject(gameObject_t *gO)
