@@ -15,20 +15,39 @@
     
     #define MICRO .microseconds / 1000000.f;
     #define UNUSED __attribute__((unused))
+    #define TRUE 1
+    #define FALSE 0
+
+    /* FONT DICT */
+
+    typedef struct fontEntry_s {
+        unsigned int id;
+        char *name;
+        sfFont *font;
+
+        struct fontEntry_s *next;
+    } fontEntry_t;
+
+    typedef struct fontDict_s {
+        fontEntry_t *entries;
+
+        sfFont *(*getFontByName)(struct fontDict_s *, char *);
+        sfFont *(*addFont)(struct fontDict_s *, char *, char *);
+    } fontDict_t;
 
     /* SPRITE DICT */
 
-    typedef struct entry_s {
+    typedef struct spriteEntry_s {
         unsigned int id;
         char *name;
         sfTexture *texture;
         sfSprite *sprite;
 
-        struct entry_s *next;
-    } entry_t;
+        struct spriteEntry_s *next;
+    } spriteEntry_t;
 
     typedef struct spriteDict_s {
-        entry_t *entries;
+        spriteEntry_t *entries;
 
         sfSprite *(*getSpriteById)(struct spriteDict_s *, unsigned int);
         sfSprite *(*getSpriteByName)(struct spriteDict_s *, char *);
@@ -44,12 +63,23 @@
     } tuple_t;
 
     typedef enum compType {
-        GRAPHICS
+        GRAPHICS,
+        TEXT
     } compType_t;
 
     typedef struct {
         sfSprite *sprite;
+        char animated;
+        float elapsed;
+        float passed;
+        sfVector2i size;
+        sfVector2i grid;
     } graphics_t;
+
+    typedef struct {
+        sfFont *font;
+        sfText *text;
+    } text_t;
 
     typedef struct comp_s {
         compType_t type;
@@ -92,10 +122,15 @@
         struct gameObject_s *next;
     } gameObject_t;
 
+    typedef enum scene_type_e {
+        INTRO
+    } scene_type_t;
+
     typedef struct {
-        char *name;
+        scene_type_t type;
         gameObject_t *entities;
         char canBeDestroyed;
+        float elapsed;
 
         int (*event)(struct core_s *);
         int (*update)(struct core_s *);
@@ -106,6 +141,7 @@
         window_t *window;
         timed_t *time;
         spriteDict_t *sprites;
+        fontDict_t *fonts;
         scene_t *curr;
         scene_t *tmp;
 

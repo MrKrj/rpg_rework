@@ -42,11 +42,17 @@
     compDict_t *CompDict(void);
     void Dtr_CompDict(compDict_t *);
 
+    fontDict_t *FontDict(void);
+    void Dtr_FontDict(fontDict_t *);
+
 
     /* COMPS */
 
     graphics_t *toGraphics(comp_t *);
     comp_t *Graphics(core_t *, FILE *);
+
+    text_t *toText(comp_t *);
+    comp_t *Text(core_t *, FILE *);
 
 
     /* SCENES */

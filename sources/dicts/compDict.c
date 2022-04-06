@@ -17,7 +17,7 @@ static comp_t *getComp(compDict_t *dict, compType_t type)
 
     if (copyList->type == type)
         return copyList;
-    while (copyList->next != NULL) {
+    while (copyList != NULL) {
         if (copyList->type == type)
             return copyList;
         copyList = copyList->next;
@@ -41,7 +41,7 @@ static comp_t *addComp(compDict_t *dict, comp_t *new)
 
 static void deleteComp(comp_t *comp)
 {
-    // comp->Dtr(comp); CREER LE FREE DE CHAQUE COMPOSENT
+    // comp->Dtr(comp); CREER LE FREE DE CHAQUE COMPOSANT
     free(comp);
 }
 

@@ -19,7 +19,8 @@ typedef struct {
 } compCtor_t;
 
 const compCtor_t compCtors[] = {
-    {"[graphics]\n", &Graphics}
+    {"[graphics]\n", &Graphics},
+    {"[text]\n", &Text}
 };
 
 gameObject_t *GameObject(core_t *core, char *name, char *config)
@@ -40,7 +41,7 @@ gameObject_t *GameObject(core_t *core, char *name, char *config)
     }
     gO->comps = CompDict();
     while (getline(&line, &len, fp) != -1)
-        for (int i = 0; i < 1; ++i)
+        for (int i = 0; i < 2; ++i)
             if (strcmp(line, compCtors[i].type) == 0)
                 gO->comps->addComp(gO->comps, compCtors[i].createComp(core, fp));
     gO->next = NULL;

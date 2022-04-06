@@ -13,7 +13,7 @@
 
 static sfSprite *getSpriteById(spriteDict_t *dict, unsigned int id)
 {
-    entry_t *copyList = dict->entries;
+    spriteEntry_t *copyList = dict->entries;
 
     if (copyList == NULL)
         return NULL;
@@ -29,7 +29,7 @@ static sfSprite *getSpriteById(spriteDict_t *dict, unsigned int id)
 
 static sfSprite *getSpriteByName(spriteDict_t *dict, char *name)
 {
-    entry_t *copyList = dict->entries;
+    spriteEntry_t *copyList = dict->entries;
 
     if (copyList == NULL)
         return NULL;
@@ -43,10 +43,10 @@ static sfSprite *getSpriteByName(spriteDict_t *dict, char *name)
     return NULL;   
 }
 
-static entry_t *createSprite(char *path, char *name)
+static spriteEntry_t *createSprite(char *path, char *name)
 {
     static int id = 0;
-    entry_t *newEntry = malloc(sizeof(entry_t));
+    spriteEntry_t *newEntry = malloc(sizeof(spriteEntry_t));
 
     if (!newEntry) {
         write(2, "Not enough memory to allocate !\n", 32);
@@ -67,8 +67,8 @@ static entry_t *createSprite(char *path, char *name)
 
 static sfSprite *addSprite(spriteDict_t *dict, char *path, char *name)
 {
-    entry_t *newEntry = createSprite(path, name);
-    entry_t *copyList = dict->entries;
+    spriteEntry_t *newEntry = createSprite(path, name);
+    spriteEntry_t *copyList = dict->entries;
 
     if (newEntry == NULL)
         return NULL;
@@ -82,7 +82,7 @@ static sfSprite *addSprite(spriteDict_t *dict, char *path, char *name)
     return sfSprite_copy(newEntry->sprite);
 }
 
-static void deleteSprite(entry_t *entry)
+static void deleteSprite(spriteEntry_t *entry)
 {
     free(entry->name);
     sfSprite_destroy(entry->sprite);
@@ -90,7 +90,7 @@ static void deleteSprite(entry_t *entry)
     free(entry);
 }
 
-static void deleteAllSprites(entry_t *entry)
+static void deleteAllSprites(spriteEntry_t *entry)
 {
     if (entry == NULL)
         return;

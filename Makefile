@@ -29,11 +29,13 @@ CORE	=	core.c									\
 PATH_DICTS	=	./sources/dicts/
 DICTS	=	spriteDict.c							\
 			compDict.c								\
+			fontDict.c								\
 
 
 ## ========================================================================== ##
 PATH_COMPS	=	./sources/components/
 COMPS	=	graphics.c								\
+			text.c									\
 
 
 ## ========================================================================== ##

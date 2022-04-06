@@ -63,11 +63,12 @@ core_t *Core(void)
     core->run = &run;
 
     // Set variables
-    core->window = Window("my_rpg", (sfVector2i){1200, 600}, 32);
+    core->window = Window("my_rpg", (sfVector2i){1280, 768}, 32);
     if (core->window->window == NULL)
         return NULL;
     core->time = Timed();
     core->sprites = SpriteDict();
+    core->fonts = FontDict();
     core->curr = Intro(core);
     return core;
 }
