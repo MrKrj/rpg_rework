@@ -18,6 +18,16 @@
     #define TRUE 1
     #define FALSE 0
 
+    struct core_s;
+
+    /* UTILS */
+
+    typedef struct ptrFct_s {
+        char *name;
+        void (*ptr)(struct core_s *);
+    } ptrFct_t;
+
+
     /* FONT DICT */
 
     typedef struct fontEntry_s {
@@ -64,7 +74,8 @@
 
     typedef enum compType {
         GRAPHICS,
-        TEXT
+        TEXT,
+        BUTTON
     } compType_t;
 
     typedef struct {
@@ -80,6 +91,10 @@
         sfFont *font;
         sfText *text;
     } text_t;
+
+    typedef struct {
+        void (*onClicked)(struct core_s *);
+    } button_t;
 
     typedef struct comp_s {
         compType_t type;
@@ -97,8 +112,6 @@
 
 
     /* CORE */
-
-    struct core_s;
 
     typedef struct {
         char *name;
@@ -123,7 +136,8 @@
     } gameObject_t;
 
     typedef enum scene_type_e {
-        INTRO
+        INTRO,
+        MENU
     } scene_type_t;
 
     typedef struct {

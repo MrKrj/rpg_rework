@@ -36,11 +36,13 @@ DICTS	=	spriteDict.c							\
 PATH_COMPS	=	./sources/components/
 COMPS	=	graphics.c								\
 			text.c									\
+			button.c								\
 
 
 ## ========================================================================== ##
 PATH_SCENES	=	./sources/scenes/
 SCENES	=	intro.c									\
+			menu.c									\
 
 
 ## ========================================================================== ##

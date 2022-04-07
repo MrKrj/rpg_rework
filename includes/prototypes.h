@@ -54,10 +54,19 @@
     text_t *toText(comp_t *);
     comp_t *Text(core_t *, FILE *);
 
+    button_t *toButton(comp_t *);
+    comp_t *Button(core_t *, FILE *);
+
+
 
     /* SCENES */
 
     scene_t *Intro(core_t *);
     void Dtr_Intro(scene_t *);
+    void Intro_passToMenu(core_t *);
+
+
+    scene_t *Menu(core_t *);
+    void Dtr_Menu(scene_t *);
 
 #endif /* PROTOTYPES_H*/

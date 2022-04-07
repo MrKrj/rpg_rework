@@ -148,7 +148,7 @@ comp_t *Graphics(core_t *core, FILE *fp)
     do {
         tuple = TupleFromFile(fp);
         if (tuple != NULL) {
-            for (int i = 0; i < 11; ++i)
+            for (int i = 0; i < (int)(sizeof(graphicsParamsCtors) / sizeof(graphicsParamsCtor_t)); ++i)
                 if (strcmp(tuple->key, graphicsParamsCtors[i].key) == 0)
                     graphicsParamsCtors[i].setParam(core, component, tuple);
             Dtr_Tuple(tuple);

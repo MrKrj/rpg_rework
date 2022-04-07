@@ -10,45 +10,9 @@
 #include "datastructure.h"
 #include "prototypes.h"
 
-/* BUTTON CALLS */
-
-void Intro_passToMenu(UNUSED core_t *core) {
-    Dtr_Intro(core->curr);
-    core->curr = Menu(core);
-}
-
-/* CLASS */
 
 static int event(UNUSED core_t *core)
 {
-    gameObject_t *tmp = core->curr->entities;
-    comp_t *comp;
-    button_t *button;
-    graphics_t *graphic;
-    sfVector2f mousePos;
-    sfVector2f spritePos;
-    sfVector2f spriteScale;
-
-    if (core->window->event.type == sfEvtMouseButtonPressed || core->window->event.type == sfEvtMouseButtonReleased) {
-        mousePos = (sfVector2f){(float)core->window->event.mouseButton.x, (float)core->window->event.mouseButton.y};
-        while (tmp != NULL) {
-            comp = tmp->comps->getComp(tmp->comps, BUTTON);
-            if (comp == NULL) {
-                tmp = tmp->next;
-                continue;
-            }
-            button = toButton(comp);
-            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS));
-            spritePos = sfSprite_getPosition(graphic->sprite);
-            spriteScale = sfSprite_getScale(graphic->sprite);
-            if ((mousePos.x >= spritePos.x && mousePos.y >= spritePos.y) &&
-                (mousePos.x <= spritePos.x + (graphic->size.x * (int)spriteScale.x) &&
-                mousePos.y <= spritePos.y + (graphic->size.y) * (int)spriteScale.y)) {
-                button->onClicked(core);
-            }
-            tmp = tmp->next;
-        }
-    }
     return 0;
 }
 
@@ -116,28 +80,28 @@ static int display(UNUSED core_t *core)
     return 0;
 }
 
-scene_t *Intro(core_t *core)
+scene_t *Menu(core_t *core)
 {
-    scene_t *intro = malloc(sizeof(scene_t));
+    scene_t *menu = malloc(sizeof(scene_t));
 
-    if (intro == NULL) {
+    if (menu == NULL) {
         write(2, "Not enough memory to allocate !\n", 32);
         return NULL;
     }
 
     // Set methods
-    intro->type = INTRO;
-    intro->entities = GameObjectsFromConfig(core, "contents/scenes/intro.ini");
-    intro->canBeDestroyed = TRUE;
-    intro->elapsed = 0.f;
-    intro->event = &event;
-    intro->update = &update;
-    intro->display = &display;
+    menu->type = MENU;
+    menu->entities = GameObjectsFromConfig(core, "contents/scenes/menu.ini");
+    menu->canBeDestroyed = TRUE;
+    menu->elapsed = 0.f;
+    menu->event = &event;
+    menu->update = &update;
+    menu->display = &display;
 
-    return intro;
+    return menu;
 }
 
-void Dtr_Intro(scene_t *intro)
+void Dtr_Menu(scene_t *menu)
 {
-    free(intro);
+    free(menu);
 }

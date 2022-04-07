@@ -116,7 +116,7 @@ comp_t *Text(core_t *core, FILE *fp)
     do {
         tuple = TupleFromFile(fp);
         if (tuple != NULL) {
-            for (int i = 0; i < 6; ++i)
+            for (int i = 0; i < (int)(sizeof(textParamsCtors) / sizeof(textParamsCtor_t)); ++i)
                 if (strcmp(tuple->key, textParamsCtors[i].key) == 0)
                     textParamsCtors[i].setParam(core, component, tuple);
             Dtr_Tuple(tuple);
