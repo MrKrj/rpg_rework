@@ -75,7 +75,8 @@
     typedef enum compType {
         GRAPHICS,
         TEXT,
-        BUTTON
+        BUTTON,
+        MUSIC
     } compType_t;
 
     typedef struct {
@@ -95,6 +96,11 @@
     typedef struct {
         void (*onClicked)(struct core_s *);
     } button_t;
+
+    typedef struct {
+        sfMusic *music;
+        int cooldown;
+    } music_t;
 
     typedef struct comp_s {
         compType_t type;

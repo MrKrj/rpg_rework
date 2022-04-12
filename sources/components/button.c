@@ -62,3 +62,8 @@ comp_t *Button(core_t *core, FILE *fp)
     comp->next = NULL;
     return comp;
 }
+
+void Dtr_Button(button_t *button)
+{
+    free(button);
+}

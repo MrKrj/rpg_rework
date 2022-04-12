@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "datastructure.h"
+#include "prototypes.h"
 #include "ret_values.h"
 
 static comp_t *getComp(compDict_t *dict, compType_t type)
@@ -41,7 +42,10 @@ static comp_t *addComp(compDict_t *dict, comp_t *new)
 
 static void deleteComp(comp_t *comp)
 {
-    // comp->Dtr(comp); CREER LE FREE DE CHAQUE COMPOSANT
+    if (comp->type == GRAPHICS) Dtr_Graphics((graphics_t *)(comp->comp));
+    if (comp->type == TEXT) Dtr_Text((text_t *)(comp->comp));
+    if (comp->type == BUTTON) Dtr_Button((button_t *)(comp->comp));
+    if (comp->type == MUSIC) Dtr_Music((music_t *)(comp->comp));
     free(comp);
 }
 

@@ -37,6 +37,7 @@ PATH_COMPS	=	./sources/components/
 COMPS	=	graphics.c								\
 			text.c									\
 			button.c								\
+			music.c									\
 
 
 ## ========================================================================== ##

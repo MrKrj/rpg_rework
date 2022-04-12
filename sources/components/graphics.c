@@ -159,3 +159,8 @@ comp_t *Graphics(core_t *core, FILE *fp)
     comp->next = NULL;
     return comp;
 }
+
+void Dtr_Graphics(graphics_t *graphics)
+{
+    free(graphics);
+}

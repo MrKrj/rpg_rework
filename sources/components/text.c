@@ -127,3 +127,9 @@ comp_t *Text(core_t *core, FILE *fp)
     comp->next = NULL;
     return comp;
 }
+
+void Dtr_Text(text_t *text)
+{
+    sfText_destroy(text->text);
+    free(text);
+}

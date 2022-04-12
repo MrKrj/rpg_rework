@@ -45,6 +45,7 @@ static int event(UNUSED core_t *core)
                 (mousePos.x <= spritePos.x + (graphic->size.x * (int)spriteScale.x) &&
                 mousePos.y <= spritePos.y + (graphic->size.y) * (int)spriteScale.y)) {
                 button->onClicked(core);
+                return 0;
             }
             tmp = tmp->next;
         }
@@ -139,5 +140,6 @@ scene_t *Intro(core_t *core)
 
 void Dtr_Intro(scene_t *intro)
 {
+    Dtr_AllGameObjects(intro->entities);
     free(intro);
 }

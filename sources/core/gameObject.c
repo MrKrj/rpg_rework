@@ -21,7 +21,8 @@ typedef struct {
 const compCtor_t compCtors[] = {
     {"[graphics]\n", &Graphics},
     {"[text]\n", &Text},
-    {"[button]\n", &Button}
+    {"[button]\n", &Button},
+    {"[music]\n", &Music}
 };
 
 gameObject_t *GameObject(core_t *core, char *name, char *config)
@@ -86,5 +87,16 @@ gameObject_t *GameObjectsFromConfig(core_t *core, char *config)
 
 void Dtr_GameObject(gameObject_t *gO)
 {
+    Dtr_CompDict(gO->comps);
+    free(gO->name);
     free(gO);
+}
+
+void Dtr_AllGameObjects(gameObject_t *gameObjects)
+{
+    if (gameObjects == NULL)
+        return;
+    Dtr_AllGameObjects(gameObjects->next);
+    Dtr_GameObject(gameObjects);
+    gameObjects = NULL;
 }

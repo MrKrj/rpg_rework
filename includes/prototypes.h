@@ -25,6 +25,7 @@
     gameObject_t *GameObject(core_t *, char *, char *);
     gameObject_t *GameObjectsFromConfig(core_t *, char *);
     void Dtr_GameObject(gameObject_t *);
+    void Dtr_AllGameObjects(gameObject_t *);
 
 
     /* UTILS */
@@ -50,12 +51,19 @@
 
     graphics_t *toGraphics(comp_t *);
     comp_t *Graphics(core_t *, FILE *);
+    void Dtr_Graphics(graphics_t *);
 
     text_t *toText(comp_t *);
     comp_t *Text(core_t *, FILE *);
+    void Dtr_Text(text_t *);
 
     button_t *toButton(comp_t *);
     comp_t *Button(core_t *, FILE *);
+    void Dtr_Button(button_t *);
+
+    music_t *toMusic(comp_t *);
+    comp_t *Music(core_t *, FILE *);
+    void Dtr_Music(music_t *);
 
 
 
