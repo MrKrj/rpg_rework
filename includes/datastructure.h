@@ -84,8 +84,10 @@
         char animated;
         float elapsed;
         float passed;
-        sfVector2i size;
-        sfVector2i grid;
+        sfVector2f pos;
+        sfVector2f size;
+        sfVector2f grid;
+        sfVector2f scale;
     } graphics_t;
 
     typedef struct {
@@ -143,7 +145,8 @@
 
     typedef enum scene_type_e {
         INTRO,
-        MENU
+        MENU,
+        GAME
     } scene_type_t;
 
     typedef struct {

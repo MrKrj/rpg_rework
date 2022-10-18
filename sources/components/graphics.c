@@ -32,6 +32,7 @@ static void setPosX(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
         return;
     sfVector2f pos = sfSprite_getPosition(component->sprite);
     pos.x = atof(tuple->value);
+    component->pos.x = atof(tuple->value);
     sfSprite_setPosition(component->sprite, pos);
 }
 
@@ -41,6 +42,7 @@ static void setPosY(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
         return;
     sfVector2f pos = sfSprite_getPosition(component->sprite);
     pos.y = atof(tuple->value);
+    component->pos.x = atof(tuple->value);
     sfSprite_setPosition(component->sprite, pos);
 }
 
@@ -48,18 +50,20 @@ static void setSizeX(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
 {
     if (component->sprite == NULL)
         return;
-    sfVector2f size = sfSprite_getScale(component->sprite);
-    size.x = atof(tuple->value);
-    sfSprite_setScale(component->sprite, size);
+    sfVector2f scale = sfSprite_getScale(component->sprite);
+    scale.x = atof(tuple->value);
+    component->scale.x = atof(tuple->value);
+    sfSprite_setScale(component->sprite, scale);
 }
 
 static void setSizeY(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
 {
     if (component->sprite == NULL)
         return;
-    sfVector2f size = sfSprite_getScale(component->sprite);
-    size.y = atof(tuple->value);
-    sfSprite_setScale(component->sprite, size);
+    sfVector2f scale = sfSprite_getScale(component->sprite);
+    scale.y = atof(tuple->value);
+    component->scale.y = atof(tuple->value);
+    sfSprite_setScale(component->sprite, scale);
 }
 
 static void setCol(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
@@ -143,8 +147,10 @@ comp_t *Graphics(core_t *core, FILE *fp)
     component->animated = FALSE;
     component->elapsed = 0.f;
     component->passed = 0.f;
-    component->size = (sfVector2i){0, 0};
-    component->grid = (sfVector2i){0, 0};
+    component->pos = (sfVector2f){0, 0};
+    component->size = (sfVector2f){0, 0};
+    component->grid = (sfVector2f){0, 0};
+    component->scale = (sfVector2f){0, 0};
     do {
         tuple = TupleFromFile(fp);
         if (tuple != NULL) {
@@ -163,4 +169,19 @@ comp_t *Graphics(core_t *core, FILE *fp)
 void Dtr_Graphics(graphics_t *graphics)
 {
     free(graphics);
+}
+
+void Graphics_updateSprite(core_t *core, graphics_t *graphic, char *path)
+{
+    sfVector2f pos = sfSprite_getPosition(graphic->sprite);
+    sfVector2f scale = sfSprite_getScale(graphic->sprite);
+    sfIntRect rect = sfSprite_getTextureRect(graphic->sprite);
+
+    sfSprite_destroy(graphic->sprite);
+    graphic->sprite = core->sprites->getSpriteByName(core->sprites, path);
+    if (graphic->sprite == NULL)
+        graphic->sprite = core->sprites->addSprite(core->sprites, path, path);
+    sfSprite_setPosition(graphic->sprite, pos);
+    sfSprite_setScale(graphic->sprite, scale);
+    sfSprite_setTextureRect(graphic->sprite, rect);
 }

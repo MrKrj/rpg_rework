@@ -24,6 +24,7 @@
 
     gameObject_t *GameObject(core_t *, char *, char *);
     gameObject_t *GameObjectsFromConfig(core_t *, char *);
+    gameObject_t *getGameObjectByName(gameObject_t *, char *);
     void Dtr_GameObject(gameObject_t *);
     void Dtr_AllGameObjects(gameObject_t *);
 
@@ -52,6 +53,7 @@
     graphics_t *toGraphics(comp_t *);
     comp_t *Graphics(core_t *, FILE *);
     void Dtr_Graphics(graphics_t *);
+    void Graphics_updateSprite(core_t *, graphics_t *, char *);
 
     text_t *toText(comp_t *);
     comp_t *Text(core_t *, FILE *);
@@ -69,12 +71,13 @@
 
     /* SCENES */
 
-    scene_t *Intro(core_t *);
-    void Dtr_Intro(scene_t *);
+    scene_t *Scene(core_t *, char *, scene_type_t, int);
+    void Dtr_Scene(scene_t *);
+
     void Intro_passToMenu(core_t *);
 
+    void Game_changeLeft(core_t *core);
+    void Game_changeRight(core_t *core);
 
-    scene_t *Menu(core_t *);
-    void Dtr_Menu(scene_t *);
 
 #endif /* PROTOTYPES_H*/

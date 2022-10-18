@@ -20,12 +20,15 @@ button_t *toButton(comp_t *comp)
 }
 
 ptrFct_t buttonPtrFct[] = {
-    {"Intro_passToMenu", &Intro_passToMenu}
+    {"Intro_passToMenu", &Intro_passToMenu},
+    {"Game_changeLeft", &Game_changeLeft},
+    {"Game_changeRight", &Game_changeRight}
 };
 
 static void setOnClicked(UNUSED core_t *core, button_t *component, tuple_t *tuple)
 {
     for (int i = 0; i < 1; ++i)
+    for (int i = 0; i < (int)(sizeof(buttonPtrFct) / sizeof(ptrFct_t)); ++i)
         if (strcmp(buttonPtrFct[i].name, tuple->value) == 0)
             component->onClicked = buttonPtrFct[i].ptr;
 }

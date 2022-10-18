@@ -69,13 +69,17 @@ core_t *Core(void)
     core->time = Timed();
     core->sprites = SpriteDict();
     core->fonts = FontDict();
-    core->curr = Intro(core);
+    // core->curr = Game(core);
+    core->curr = Scene(core, "contents/game/game.ini", GAME, TRUE);
     return core;
 }
 
 void Dtr_Core(core_t* core)
 {
     Dtr_Window(core->window);
+    Dtr_Timed(core->time);
     Dtr_SpriteDict(core->sprites);
+    Dtr_FontDict(core->fonts);
+    Dtr_Scene(core->curr);
     free(core);
 }

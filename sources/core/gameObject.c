@@ -51,6 +51,18 @@ gameObject_t *GameObject(core_t *core, char *name, char *config)
     return gO;
 }
 
+gameObject_t *getGameObjectByName(gameObject_t *entities, char *name)
+{
+    gameObject_t *tmp = entities;
+
+    while (tmp != NULL) {
+        if (strcmp(tmp->name, name) == 0)
+            return tmp;
+        tmp = tmp->next;
+    }
+    return NULL;
+}
+
 gameObject_t *addGameObject(core_t *core, gameObject_t *entities, char *name, char *config)
 {
     gameObject_t *newGameObject = GameObject(core, name, config);

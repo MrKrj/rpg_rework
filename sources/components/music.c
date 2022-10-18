@@ -34,6 +34,8 @@ static void setLoop(UNUSED core_t *core, music_t *component, tuple_t *tuple)
 {
     if (strcmp(tuple->value, "true") == 0 && component->music != NULL)
         sfMusic_setLoop(component->music, sfTrue);
+    else
+        sfMusic_setLoop(component->music, sfFalse);
 }
 
 static void setVolume(UNUSED core_t *core, music_t *component, tuple_t *tuple)
