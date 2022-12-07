@@ -24,10 +24,11 @@ window_t *Window(char *gameName, sfVector2i size, int bits)
     window->mode.width = size.x;
     window->mode.height = size.y;
     window->mode.bitsPerPixel = bits;
+    window->currSize = (sfVector2i){size.x, size.y};
     window->window = sfRenderWindow_create(
         window->mode,
         window->name,
-        sfClose | sfResize,
+        sfClose,
         NULL
     );
     if (!window->window) {

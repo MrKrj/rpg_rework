@@ -67,6 +67,10 @@
     comp_t *Music(core_t *, FILE *);
     void Dtr_Music(music_t *);
 
+    hover_t *toHover(comp_t *comp);
+    comp_t *Hover(core_t *, FILE *);
+    void Dtr_Hover(hover_t *);
+
 
 
     /* SCENES */
@@ -76,8 +80,10 @@
 
     void Intro_passToMenu(core_t *);
 
-    void Game_changeLeft(core_t *core);
-    void Game_changeRight(core_t *core);
+    void Game_changeLeft(core_t *, int);
+    void Game_changeRight(core_t *, int);
+    void Game_hover_ChangeRight(core_t *, int);
+    void Game_hover_ChangeLeft(core_t *, int);
 
 
-#endif /* PROTOTYPES_H*/
+#endif /* PROTOTYPES_H */

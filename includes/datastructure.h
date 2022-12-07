@@ -24,9 +24,8 @@
 
     typedef struct ptrFct_s {
         char *name;
-        void (*ptr)(struct core_s *);
+        void (*ptr)(struct core_s *, int);
     } ptrFct_t;
-
 
     /* FONT DICT */
 
@@ -76,14 +75,18 @@
         GRAPHICS,
         TEXT,
         BUTTON,
-        MUSIC
+        MUSIC,
+        HOVER
     } compType_t;
 
     typedef struct {
         sfSprite *sprite;
         char animated;
+        char parallax;
+        int velocity;
         float elapsed;
         float passed;
+        float opacity;
         sfVector2f pos;
         sfVector2f size;
         sfVector2f grid;
@@ -91,12 +94,16 @@
     } graphics_t;
 
     typedef struct {
+        void (*onHover)(struct core_s *, int);
+    } hover_t;
+
+    typedef struct {
         sfFont *font;
         sfText *text;
     } text_t;
 
     typedef struct {
-        void (*onClicked)(struct core_s *);
+        void (*onClicked)(struct core_s *, int);
     } button_t;
 
     typedef struct {
@@ -125,6 +132,7 @@
         char *name;
         sfVideoMode mode;
         sfRenderWindow *window;
+        sfVector2i currSize;
         sfEvent event;
     } window_t;
 
@@ -174,4 +182,4 @@
         int (*run)(struct core_s *);
     } core_t;
 
-#endif /* DATASTRUCTURE_H*/
+#endif /* DATASTRUCTURE_H */

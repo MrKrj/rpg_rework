@@ -12,22 +12,25 @@
 
 /* CLASS */
 
-static int button_is_cliked(gameObject_t *gO, sfVector2f mousePos)
+static int isIn(core_t *core, gameObject_t *gO, sfVector2f mousePos)
 {
     graphics_t *graphic = toGraphics(gO->comps->getComp(gO->comps, GRAPHICS));
     sfVector2f spritePos = sfSprite_getPosition(graphic->sprite);
     sfVector2f spriteScale = sfSprite_getScale(graphic->sprite);
-    if ((mousePos.x >= spritePos.x && mousePos.y >= spritePos.y) &&
-        (mousePos.x <= spritePos.x + (graphic->size.x * (int)spriteScale.x) &&
-        mousePos.y <= spritePos.y + (graphic->size.y) * (int)spriteScale.y)) {
+    float fx = core->window->currSize.x / core->window->mode.width;
+    float fy = core->window->currSize.y / core->window->mode.height;
+
+    if ((mousePos.x >= spritePos.x * fx && mousePos.y >= spritePos.y * fy) &&
+        (mousePos.x <= (spritePos.x + (graphic->size.x * (int)spriteScale.x)) * fx &&
+        mousePos.y <= (spritePos.y + (graphic->size.y * (int)spriteScale.y)) * fy)) {
         return TRUE;
     }
     return FALSE;
 }
 
-static int clicked(core_t *core)
+static int clicked(core_t *core, int on)
 {
-    gameObject_t *tmp = core->curr->entities;
+    gameObject_t *gO = core->curr->entities;
     comp_t *comp;
     button_t *button;
     sfVector2f mousePos = (sfVector2f) {
@@ -35,29 +38,91 @@ static int clicked(core_t *core)
         (float)core->window->event.mouseButton.y
     };
 
-    while (tmp != NULL) {
-        comp = tmp->comps->getComp(tmp->comps, BUTTON);
+    while (gO != NULL) {
+        comp = gO->comps->getComp(gO->comps, BUTTON);
         if (comp == NULL) {
-            tmp = tmp->next;
+            gO = gO->next;
             continue;
         }
         button = toButton(comp);
-        if (button_is_cliked(tmp, mousePos) == TRUE) {
-            button->onClicked(core);
+        if (isIn(core, gO, mousePos) == TRUE) {
+            button->onClicked(core, on);
             return TRUE;
         }
-        tmp = tmp->next;
+        gO = gO->next;
     }
     return FALSE;
 }
 
+static void hover(core_t *core)
+{
+    gameObject_t *gO = core->curr->entities;
+    comp_t *comp;
+    hover_t *hover;
+    sfVector2f mousePos = (sfVector2f) {
+        (float)core->window->event.mouseMove.x,
+        (float)core->window->event.mouseMove.y
+    };
+
+    while (gO != NULL) {
+        comp = gO->comps->getComp(gO->comps, HOVER);
+        if (comp == NULL) {
+            gO = gO->next;
+            continue;
+        }
+        hover = toHover(comp);
+        if (isIn(core, gO, mousePos) == TRUE)
+            hover->onHover(core, TRUE);
+        else
+            hover->onHover(core, FALSE);
+        gO = gO->next;
+    }
+}
+
 static int event(UNUSED core_t *core)
 {
-    if (core->window->event.type == sfEvtMouseButtonReleased) {
-        if (clicked(core) == TRUE)
+    if (core->window->event.type == sfEvtMouseButtonReleased)
+        if (clicked(core, TRUE) == TRUE)
             return TRUE;
+    if (core->window->event.type == sfEvtMouseButtonPressed)
+        if (clicked(core, FALSE) == TRUE)
+            return TRUE;
+    if (core->window->event.type == sfEvtMouseMoved) {
+        hover(core);
+    }
+    if (core->window->event.type == sfEvtResized) {
+        core->window->currSize.x = core->window->event.size.width;
+        core->window->currSize.y = core->window->event.size.height;
     }
     return TRUE;
+}
+
+static void animate(core_t *core, graphics_t *graphic)
+{
+    sfIntRect rect = sfSprite_getTextureRect(graphic->sprite);
+
+    graphic->elapsed += core->time->elapsed;
+    if (graphic->elapsed > graphic->passed) {
+        rect.left += graphic->size.x;
+        if (rect.left == graphic->size.x * graphic->grid.x) {
+            rect.left = 0;
+            rect.top += graphic->size.y;
+            if (rect.top == graphic->size.y * graphic->grid.y)
+                rect.top = 0;
+        }
+        sfSprite_setTextureRect(graphic->sprite, rect);
+        graphic->elapsed -= graphic->passed;
+    }
+}
+
+static void parallax(core_t *core, graphics_t *graphic)
+{
+    sfVector2f pos = sfSprite_getPosition(graphic->sprite);
+
+    pos.x += ((float)graphic->velocity * core->time->elapsed);
+    if ((graphic->velocity > 0 && pos.x > core->window->mode.width) || (graphic->velocity < 0 && pos.x < 0))
+        pos.x = graphic->pos.x;
+    sfSprite_setPosition(graphic->sprite, pos);
 }
 
 static int update(UNUSED core_t *core)
@@ -65,7 +130,6 @@ static int update(UNUSED core_t *core)
     gameObject_t *tmp = core->curr->entities;
     comp_t *comp;
     graphics_t *graphic;
-    sfIntRect rect;
 
     core->curr->elapsed += core->time->elapsed;
     while (tmp != NULL) {
@@ -75,23 +139,10 @@ static int update(UNUSED core_t *core)
             continue;
         }
         graphic = toGraphics(comp);
-        if (graphic->animated == FALSE) {
-            tmp = tmp->next;
-            continue;
-        }
-        graphic->elapsed += core->time->elapsed;
-        rect = sfSprite_getTextureRect(graphic->sprite);
-        if (graphic->elapsed > graphic->passed) {
-            rect.left += graphic->size.x;
-            if (rect.left == graphic->size.x * graphic->grid.x) {
-                rect.left = 0;
-                rect.top += graphic->size.y;
-                if (rect.top == graphic->size.y * graphic->grid.y)
-                    rect.top = 0;
-            }
-            sfSprite_setTextureRect(graphic->sprite, rect);
-            graphic->elapsed -= graphic->passed;
-        }
+        if (graphic->animated == TRUE)
+            animate(core, graphic);
+        if (graphic->parallax == TRUE)
+            parallax(core, graphic);
         tmp = tmp->next;
     }
     return 0;

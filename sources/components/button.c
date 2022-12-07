@@ -20,7 +20,6 @@ button_t *toButton(comp_t *comp)
 }
 
 ptrFct_t buttonPtrFct[] = {
-    {"Intro_passToMenu", &Intro_passToMenu},
     {"Game_changeLeft", &Game_changeLeft},
     {"Game_changeRight", &Game_changeRight}
 };

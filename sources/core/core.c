@@ -29,7 +29,7 @@ static int update(core_t *core)
 
 static int display(core_t *core)
 {
-    sfRenderWindow_clear(core->window->window, sfBlack);
+    sfRenderWindow_clear(core->window->window, sfBlue);
     core->curr->display(core);
     sfRenderWindow_display(core->window->window);
     return 0;
@@ -70,7 +70,7 @@ core_t *Core(void)
     core->sprites = SpriteDict();
     core->fonts = FontDict();
     // core->curr = Game(core);
-    core->curr = Scene(core, "contents/game/game.ini", GAME, TRUE);
+    core->curr = Scene(core, "contents/intro/intro.ini", INTRO, TRUE);
     return core;
 }
 

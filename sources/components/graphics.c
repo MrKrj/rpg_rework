@@ -28,41 +28,49 @@ static void setPath(core_t *core, graphics_t *component, tuple_t *tuple)
 
 static void setPosX(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
 {
+    sfVector2f pos;
+
     if (component->sprite == NULL)
         return;
-    sfVector2f pos = sfSprite_getPosition(component->sprite);
+    pos = sfSprite_getPosition(component->sprite);
     pos.x = atof(tuple->value);
-    component->pos.x = atof(tuple->value);
+    component->pos.x = pos.x;
     sfSprite_setPosition(component->sprite, pos);
 }
 
 static void setPosY(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
 {
+    sfVector2f pos;
+
     if (component->sprite == NULL)
         return;
-    sfVector2f pos = sfSprite_getPosition(component->sprite);
+    pos = sfSprite_getPosition(component->sprite);
     pos.y = atof(tuple->value);
-    component->pos.x = atof(tuple->value);
+    component->pos.y = pos.y;
     sfSprite_setPosition(component->sprite, pos);
 }
 
 static void setSizeX(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
 {
+    sfVector2f scale;
+
     if (component->sprite == NULL)
         return;
-    sfVector2f scale = sfSprite_getScale(component->sprite);
+    scale = sfSprite_getScale(component->sprite);
     scale.x = atof(tuple->value);
-    component->scale.x = atof(tuple->value);
+    component->scale.x = scale.x;
     sfSprite_setScale(component->sprite, scale);
 }
 
 static void setSizeY(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
 {
+    sfVector2f scale;
+
     if (component->sprite == NULL)
         return;
-    sfVector2f scale = sfSprite_getScale(component->sprite);
+    scale = sfSprite_getScale(component->sprite);
     scale.y = atof(tuple->value);
-    component->scale.y = atof(tuple->value);
+    component->scale.y = scale.y;
     sfSprite_setScale(component->sprite, scale);
 }
 
@@ -83,6 +91,7 @@ static void setRow(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
 static void setWidth(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
 {
     sfIntRect rect;
+
     if (component->sprite == NULL)
         return;
     rect = sfSprite_getTextureRect(component->sprite);
@@ -116,6 +125,32 @@ static void setPassed(UNUSED core_t *core, graphics_t *component, tuple_t *tuple
     component->passed = atof(tuple->value);
 }
 
+static void setParallax(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
+{
+    if (component->sprite == NULL)
+        return;
+    component->parallax = strcmp(tuple->value, "true") == 0 ? TRUE : FALSE;
+}
+
+static void setVelocity(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
+{
+    if (component->sprite == NULL)
+        return;
+    component->velocity = atoi(tuple->value);
+}
+
+static void setOpacity(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
+{
+    sfColor color;
+
+    if (component->sprite == NULL)
+        return;
+    color = sfSprite_getColor(component->sprite);
+    color.a = atoi(tuple->value) * 100;
+    component->opacity = color.a;
+    sfSprite_setColor(component->sprite, color);
+}
+
 typedef struct {
     char *key;
     void (*setParam)(core_t *, graphics_t *, tuple_t *);
@@ -132,7 +167,10 @@ const graphicsParamsCtor_t graphicsParamsCtors[] = {
     {"width", &setWidth},
     {"height", &setHeight},
     {"animated", &setAnimed},
-    {"passed", &setPassed}
+    {"passed", &setPassed},
+    {"parallax", &setParallax},
+    {"velocity", &setVelocity},
+    {"opacity", &setOpacity}
 };
 
 comp_t *Graphics(core_t *core, FILE *fp)
@@ -145,8 +183,11 @@ comp_t *Graphics(core_t *core, FILE *fp)
         return NULL;
     component->sprite = NULL;
     component->animated = FALSE;
+    component->parallax = FALSE;
+    component->velocity = 0;
     component->elapsed = 0.f;
     component->passed = 0.f;
+    component->opacity = 0;
     component->pos = (sfVector2f){0, 0};
     component->size = (sfVector2f){0, 0};
     component->grid = (sfVector2f){0, 0};

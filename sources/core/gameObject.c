@@ -22,7 +22,8 @@ const compCtor_t compCtors[] = {
     {"[graphics]\n", &Graphics},
     {"[text]\n", &Text},
     {"[button]\n", &Button},
-    {"[music]\n", &Music}
+    {"[music]\n", &Music},
+    {"[hover]\n", &Hover}
 };
 
 gameObject_t *GameObject(core_t *core, char *name, char *config)
