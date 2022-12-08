@@ -20,7 +20,6 @@ static int getValueIndex(char *line)
     return ++i;
 }
 
-
 static int getKeySize(char *line)
 {
     int i = 0;

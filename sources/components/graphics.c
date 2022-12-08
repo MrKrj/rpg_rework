@@ -19,6 +19,11 @@ graphics_t *toGraphics(comp_t *comp)
     return (graphics_t *)comp->comp;
 }
 
+static void setName(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
+{
+    component->name = strdup(tuple->value);
+}
+
 static void setPath(core_t *core, graphics_t *component, tuple_t *tuple)
 {
     component->sprite = core->sprites->getSpriteByName(core->sprites, tuple->value);
@@ -151,12 +156,27 @@ static void setOpacity(UNUSED core_t *core, graphics_t *component, tuple_t *tupl
     sfSprite_setColor(component->sprite, color);
 }
 
+static void setDarkness(UNUSED core_t *core, graphics_t *component, tuple_t *tuple)
+{
+    sfColor color;
+
+    if (component->sprite == NULL)
+        return;
+    color = sfSprite_getColor(component->sprite);
+    color.r = atoi(tuple->value);
+    color.g = color.r;
+    color.b = color.r;
+    component->darkness = color.r;
+    sfSprite_setColor(component->sprite, color);
+}
+
 typedef struct {
     char *key;
     void (*setParam)(core_t *, graphics_t *, tuple_t *);
 } graphicsParamsCtor_t;
 
 const graphicsParamsCtor_t graphicsParamsCtors[] = {
+    {"name", &setName},
     {"path", &setPath},
     {"posX", &setPosX},
     {"posY", &setPosY},
@@ -170,7 +190,8 @@ const graphicsParamsCtor_t graphicsParamsCtors[] = {
     {"passed", &setPassed},
     {"parallax", &setParallax},
     {"velocity", &setVelocity},
-    {"opacity", &setOpacity}
+    {"opacity", &setOpacity},
+    {"darkness", &setDarkness}
 };
 
 comp_t *Graphics(core_t *core, FILE *fp)
@@ -181,6 +202,7 @@ comp_t *Graphics(core_t *core, FILE *fp)
 
     if (comp == NULL || component == NULL)
         return NULL;
+    component->name = NULL;
     component->sprite = NULL;
     component->animated = FALSE;
     component->parallax = FALSE;
@@ -188,6 +210,7 @@ comp_t *Graphics(core_t *core, FILE *fp)
     component->elapsed = 0.f;
     component->passed = 0.f;
     component->opacity = 0;
+    component->darkness = 255;
     component->pos = (sfVector2f){0, 0};
     component->size = (sfVector2f){0, 0};
     component->grid = (sfVector2f){0, 0};
@@ -209,6 +232,7 @@ comp_t *Graphics(core_t *core, FILE *fp)
 
 void Dtr_Graphics(graphics_t *graphics)
 {
+    free(graphics->name);
     free(graphics);
 }
 

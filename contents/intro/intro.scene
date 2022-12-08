@@ -1,0 +1,7 @@
+[entities]
+music=contents/intro/music.obj
+background=contents/intro/background.obj
+clouds=contents/intro/clouds.obj
+title=contents/intro/title.obj
+pass=contents/intro/pass.obj
+fadeIn=contents/intro/fadeIn.obj

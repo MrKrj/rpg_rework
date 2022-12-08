@@ -34,11 +34,11 @@ void Game_changeLeft(UNUSED core_t *core, int on)
             idx++;
             if (idx == 6)
                 idx = 0;
-            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS));
+            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS, 0));
             Graphics_updateSprite(core, graphic, hairsFiles[idx]);
         }
         if (strcmp(tmp->name, "change_left") == 0) {
-            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS));
+            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS, 0));
             rect = sfSprite_getTextureRect(graphic->sprite);
             if (on == FALSE)
                 rect.left = 2 * graphic->size.x;
@@ -61,11 +61,11 @@ void Game_changeRight(UNUSED core_t *core, int on)
             idx--;
             if (idx == -1)
                 idx = 5;
-            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS));
+            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS, 0));
             Graphics_updateSprite(core, graphic, hairsFiles[idx]);
         }
         if (strcmp(tmp->name, "change_right") == 0) {
-            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS));
+            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS, 0));
             rect = sfSprite_getTextureRect(graphic->sprite);
             if (on == FALSE)
                 rect.left = 2 * graphic->size.x;
@@ -86,7 +86,7 @@ void Game_hover_ChangeRight(core_t *core, int on)
 
     while (tmp != NULL) {
         if (strcmp(tmp->name, "change_right") == 0) {
-            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS));
+            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS, 0));
             sfIntRect rect = sfSprite_getTextureRect(graphic->sprite);
             if (on == TRUE)
                 rect.left = graphic->size.x;
@@ -105,7 +105,7 @@ void Game_hover_ChangeLeft(core_t *core, int on)
 
     while (tmp != NULL) {
         if (strcmp(tmp->name, "change_left") == 0) {
-            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS));
+            graphic = toGraphics(tmp->comps->getComp(tmp->comps, GRAPHICS, 0));
             sfIntRect rect = sfSprite_getTextureRect(graphic->sprite);
             if (on == TRUE)
                 rect.left = graphic->size.x;
@@ -115,4 +115,12 @@ void Game_hover_ChangeLeft(core_t *core, int on)
         }
         tmp = tmp->next;
     }
+}
+
+/* CUSTOM UPDATE */
+
+int Game_update(UNUSED core_t *core)
+{
+    
+    return 0;
 }

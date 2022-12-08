@@ -71,19 +71,27 @@
     comp_t *Hover(core_t *, FILE *);
     void Dtr_Hover(hover_t *);
 
+    anyEvent_t *toAnyEvent(comp_t *comp);
+    comp_t *AnyEvent(core_t *, FILE *);
+    void Dtr_AnyEvent(anyEvent_t *);
+
 
 
     /* SCENES */
 
-    scene_t *Scene(core_t *, char *, scene_type_t, int);
+    scene_t *Scene(core_t *, char *, scene_type_t, int (*customUpdate)(core_t *), int);
     void Dtr_Scene(scene_t *);
+    
+    int Intro_update(core_t *);
+    void Intro_pass(core_t *, int);
 
-    void Intro_passToMenu(core_t *);
-
+    int Game_update(core_t *);
     void Game_changeLeft(core_t *, int);
     void Game_changeRight(core_t *, int);
     void Game_hover_ChangeRight(core_t *, int);
     void Game_hover_ChangeLeft(core_t *, int);
+
+    int Menu_update(core_t *);
 
 
 #endif /* PROTOTYPES_H */

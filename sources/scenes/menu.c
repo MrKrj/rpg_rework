@@ -10,4 +10,10 @@
 #include "datastructure.h"
 #include "prototypes.h"
 
-/* BUTTON CALLS */
+/* CUSTOM UPDATE */
+
+int Menu_update(UNUSED core_t *core)
+{
+    
+    return 0;
+}

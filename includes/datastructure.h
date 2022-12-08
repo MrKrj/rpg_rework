@@ -17,6 +17,7 @@
     #define UNUSED __attribute__((unused))
     #define TRUE 1
     #define FALSE 0
+    #define DEFAULT 0
 
     struct core_s;
 
@@ -76,10 +77,12 @@
         TEXT,
         BUTTON,
         MUSIC,
-        HOVER
+        HOVER,
+        ANY_EVENT
     } compType_t;
 
     typedef struct {
+        char *name;
         sfSprite *sprite;
         char animated;
         char parallax;
@@ -87,11 +90,17 @@
         float elapsed;
         float passed;
         float opacity;
+        int darkness;
         sfVector2f pos;
         sfVector2f size;
         sfVector2f grid;
         sfVector2f scale;
     } graphics_t;
+
+    typedef struct {
+        void (*onKeyPressed)(struct core_s *, int);
+        void (*onMousePressed)(struct core_s *, int);
+    } anyEvent_t;
 
     typedef struct {
         void (*onHover)(struct core_s *, int);
@@ -121,7 +130,7 @@
     typedef struct compDict_s {
         comp_t *comps;
 
-        comp_t *(*getComp)(struct compDict_s *, compType_t);
+        comp_t *(*getComp)(struct compDict_s *, compType_t, int);
         comp_t *(*addComp)(struct compDict_s *, comp_t *);
     } compDict_t;
 
@@ -165,6 +174,7 @@
 
         int (*event)(struct core_s *);
         int (*update)(struct core_s *);
+        int (*customUpdate)(struct core_s *);
         int (*display)(struct core_s *);
     } scene_t;
 

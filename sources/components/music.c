@@ -41,7 +41,7 @@ static void setLoop(UNUSED core_t *core, music_t *component, tuple_t *tuple)
 static void setVolume(UNUSED core_t *core, music_t *component, tuple_t *tuple)
 {
     if (component->music != NULL)
-        sfMusic_setLoop(component->music, atof(tuple->value));
+        sfMusic_setVolume(component->music, atof(tuple->value));
 }
 
 static void setCooldown(UNUSED core_t *core, music_t *component, tuple_t *tuple)

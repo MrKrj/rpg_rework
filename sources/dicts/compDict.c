@@ -12,15 +12,17 @@
 #include "prototypes.h"
 #include "ret_values.h"
 
-static comp_t *getComp(compDict_t *dict, compType_t type)
+static comp_t *getComp(compDict_t *dict, compType_t type, int ref)
 {
+    int idx = 0;
     comp_t *copyList = dict->comps;
 
-    if (copyList->type == type)
-        return copyList;
     while (copyList != NULL) {
-        if (copyList->type == type)
-            return copyList;
+        if (copyList->type == type) {
+            if (ref == idx)
+                return copyList;
+            idx++;
+        }
         copyList = copyList->next;
     }
     return NULL;

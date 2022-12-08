@@ -24,6 +24,7 @@ static int event(core_t *core)
 static int update(core_t *core)
 {
     core->curr->update(core);
+    core->curr->customUpdate(core);
     return 0;
 }
 
@@ -69,8 +70,7 @@ core_t *Core(void)
     core->time = Timed();
     core->sprites = SpriteDict();
     core->fonts = FontDict();
-    // core->curr = Game(core);
-    core->curr = Scene(core, "contents/intro/intro.ini", INTRO, TRUE);
+    core->curr = Scene(core, "contents/intro/intro.scene", INTRO, &Intro_update, TRUE);
     return core;
 }
 
@@ -80,6 +80,8 @@ void Dtr_Core(core_t* core)
     Dtr_Timed(core->time);
     Dtr_SpriteDict(core->sprites);
     Dtr_FontDict(core->fonts);
+    if (core->tmp != NULL)
+        Dtr_Scene(core->tmp);
     Dtr_Scene(core->curr);
     free(core);
 }

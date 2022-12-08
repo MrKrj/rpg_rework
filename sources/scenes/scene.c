@@ -14,7 +14,7 @@
 
 static int isIn(core_t *core, gameObject_t *gO, sfVector2f mousePos)
 {
-    graphics_t *graphic = toGraphics(gO->comps->getComp(gO->comps, GRAPHICS));
+    graphics_t *graphic = toGraphics(gO->comps->getComp(gO->comps, GRAPHICS, 0));
     sfVector2f spritePos = sfSprite_getPosition(graphic->sprite);
     sfVector2f spriteScale = sfSprite_getScale(graphic->sprite);
     float fx = core->window->currSize.x / core->window->mode.width;
@@ -39,15 +39,16 @@ static int clicked(core_t *core, int on)
     };
 
     while (gO != NULL) {
-        comp = gO->comps->getComp(gO->comps, BUTTON);
-        if (comp == NULL) {
-            gO = gO->next;
-            continue;
-        }
-        button = toButton(comp);
-        if (isIn(core, gO, mousePos) == TRUE) {
-            button->onClicked(core, on);
-            return TRUE;
+        comp = gO->comps->comps;
+        while (comp != NULL) {
+            if (comp->type == BUTTON) {
+                button = toButton(comp);
+                if (isIn(core, gO, mousePos) == TRUE) {
+                    button->onClicked(core, on);
+                    return TRUE;
+                }
+            }
+            comp = comp->next;
         }
         gO = gO->next;
     }
@@ -65,28 +66,71 @@ static void hover(core_t *core)
     };
 
     while (gO != NULL) {
-        comp = gO->comps->getComp(gO->comps, HOVER);
+        comp = gO->comps->comps;
+        while (comp != NULL) {
+            if (comp->type == HOVER) {
+                hover = toHover(comp);
+                if (isIn(core, gO, mousePos) == TRUE)
+                    hover->onHover(core, TRUE);
+                else
+                    hover->onHover(core, FALSE);
+            }
+            comp = comp->next;
+        }
+        gO = gO->next;
+    }
+}
+
+static void keyPressed(core_t *core)
+{
+    gameObject_t *gO = core->curr->entities;
+    comp_t *comp;
+    anyEvent_t *anyEvent;
+
+    while (gO != NULL) {
+        comp = gO->comps->getComp(gO->comps, ANY_EVENT, 0);
         if (comp == NULL) {
             gO = gO->next;
             continue;
         }
-        hover = toHover(comp);
-        if (isIn(core, gO, mousePos) == TRUE)
-            hover->onHover(core, TRUE);
-        else
-            hover->onHover(core, FALSE);
+        anyEvent = toAnyEvent(comp);
+        anyEvent->onKeyPressed(core, DEFAULT);
+        gO = gO->next;
+    }
+}
+
+static void mousePressed(core_t *core)
+{
+    gameObject_t *gO = core->curr->entities;
+    comp_t *comp;
+    anyEvent_t *anyEvent;
+
+    while (gO != NULL) {
+        comp = gO->comps->getComp(gO->comps, ANY_EVENT, 0);
+        if (comp == NULL) {
+            gO = gO->next;
+            continue;
+        }
+        anyEvent = toAnyEvent(comp);
+        anyEvent->onMousePressed(core, DEFAULT);
         gO = gO->next;
     }
 }
 
 static int event(UNUSED core_t *core)
 {
-    if (core->window->event.type == sfEvtMouseButtonReleased)
+    if (core->window->event.type == sfEvtKeyPressed) {
+        keyPressed(core);
+    }
+    if (core->window->event.type == sfEvtMouseButtonReleased) {
         if (clicked(core, TRUE) == TRUE)
             return TRUE;
-    if (core->window->event.type == sfEvtMouseButtonPressed)
+    }
+    if (core->window->event.type == sfEvtMouseButtonPressed) {
+        mousePressed(core);
         if (clicked(core, FALSE) == TRUE)
             return TRUE;
+    }
     if (core->window->event.type == sfEvtMouseMoved) {
         hover(core);
     }
@@ -133,16 +177,17 @@ static int update(UNUSED core_t *core)
 
     core->curr->elapsed += core->time->elapsed;
     while (tmp != NULL) {
-        comp = tmp->comps->getComp(tmp->comps, GRAPHICS);
-        if (comp == NULL) {
-            tmp = tmp->next;
-            continue;
+        comp = tmp->comps->comps;
+        while (comp != NULL) {
+            if (comp->type == GRAPHICS) {
+                graphic = toGraphics(comp);
+                if (graphic->animated == TRUE)
+                    animate(core, graphic);
+                if (graphic->parallax == TRUE)
+                    parallax(core, graphic);
+            }
+            comp = comp->next;
         }
-        graphic = toGraphics(comp);
-        if (graphic->animated == TRUE)
-            animate(core, graphic);
-        if (graphic->parallax == TRUE)
-            parallax(core, graphic);
         tmp = tmp->next;
     }
     return 0;
@@ -154,28 +199,28 @@ static int display(UNUSED core_t *core)
     comp_t *comp;
 
     while (tmp != NULL) {
-        comp = tmp->comps->getComp(tmp->comps, GRAPHICS);
-        if (comp != NULL) {
-            sfRenderWindow_drawSprite(
-                core->window->window,
-                toGraphics(comp)->sprite,
-                NULL
-            );
-        }
-        comp = tmp->comps->getComp(tmp->comps, TEXT);
-        if (comp != NULL) {
-            sfRenderWindow_drawText(
-                core->window->window,
-                toText(comp)->text,
-                NULL
-            );
+        comp = tmp->comps->comps;
+        while (comp != NULL) {
+            if (comp->type == GRAPHICS)
+                sfRenderWindow_drawSprite(
+                    core->window->window,
+                    toGraphics(comp)->sprite,
+                    NULL
+                );
+            if (comp->type == TEXT)
+                sfRenderWindow_drawText(
+                    core->window->window,
+                    toText(comp)->text,
+                    NULL
+                );
+            comp = comp->next;
         }
         tmp = tmp->next;
     }
     return 0;
 }
 
-scene_t *Scene(core_t *core, char *path, scene_type_t type, int canBeDestroyed)
+scene_t *Scene(core_t *core, char *path, scene_type_t type, int (*customUpdate)(core_t *core), int canBeDestroyed)
 {
     scene_t *scene = malloc(sizeof(scene_t));
 
@@ -191,8 +236,8 @@ scene_t *Scene(core_t *core, char *path, scene_type_t type, int canBeDestroyed)
     scene->elapsed = 0.f;
     scene->event = &event;
     scene->update = &update;
+    scene->customUpdate = customUpdate;
     scene->display = &display;
-
     return scene;
 }
 

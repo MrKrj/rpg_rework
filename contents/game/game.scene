@@ -1,0 +1,6 @@
+[entities]
+character=contents/game/body.obj
+hair=contents/game/hair.obj
+hand=contents/game/hand.obj
+change_left=contents/game/change_left.obj
+change_right=contents/game/change_right.obj
